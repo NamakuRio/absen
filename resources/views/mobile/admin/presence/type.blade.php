@@ -8,10 +8,10 @@
 
 @section('content')
     <div class="section-header">
-        <h1>Izin</h1>
+        <h1>Jenis Kehadiran</h1>
         <div class="section-header-breadcrumb">
             <div class="breadcrumb-item active"><a href="{{ route('admin.dashboard') }}">Beranda</a></div>
-            <div class="breadcrumb-item">Izin</div>
+            <div class="breadcrumb-item">Jenis Kehadiran</div>
         </div>
     </div>
 
@@ -20,23 +20,22 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        <h4>Daftar Izin</h4>
-                        @can ('permission.create')
+                        <h4>Daftar Jenis Kehadiran</h4>
+                        @can ('presence_type.create')
                             <div class="card-header-action">
-                                <a href="javascript:void(0)" class="btn btn-primary" onclick="$('#modal-add-permission').modal('show');setTimeout(() => {$('#add-role-name').focus()},500)" tooltip="Tambah Izin"><i class="fas fa-plus"></i> Tambah Izin</a>
+                                <a href="javascript:void(0)" class="btn btn-primary" onclick="$('#modal-add-presence-type').modal('show');setTimeout(() => {$('#add-presence-type-name').focus()},500)" tooltip="Tambah Jenis Kehadiran"><i class="fas fa-plus"></i> Tambah Jenis Kehadiran</a>
                             </div>
                         @endcan
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
-                            <table class="table table-striped" id="permission-list">
+                            <table class="table table-striped" id="presence-type-list">
                                 <thead>
                                     <tr>
                                         <th class="text-center" width="10">
                                             #
                                         </th>
                                         <th>Nama</th>
-                                        <th>Guard Name</th>
                                         <th width="150">Action</th>
                                     </tr>
                                 </thead>
@@ -50,8 +49,8 @@
 @endsection
 
 @section('modals')
-    @can ('permission.create')
-        <div class="modal fade" tabindex="-1" role="dialog" id="modal-add-permission">
+    @can ('presence_type.create')
+        <div class="modal fade" tabindex="-1" role="dialog" id="modal-add-presence-type">
             <div class="modal-dialog modal-dialog-centered modal-md" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -60,58 +59,50 @@
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <form method="POST" action="javascript:void(0)" id="form-add-permission">
+                    <form method="POST" action="javascript:void(0)" id="form-add-presence-type">
                         @csrf
                         <div class="modal-body">
                             <div class="row">
                                 <div class="form-group col-12">
                                     <label>Nama</label>
-                                    <input type="text" class="form-control" name="name" id="add-role-name" required autofocus>
-                                </div>
-                                <div class="form-group col-12">
-                                    <label>Guard Name</label>
-                                    <input type="text" class="form-control" name="guard_name" id="add-role-guard-name" required>
+                                    <input type="text" class="form-control" name="name" id="add-presence-type-name" required autofocus>
                                 </div>
                             </div>
                         </div>
                         <div class="modal-footer bg-whitesmoke br">
                             <button type="button" class="btn btn-danger" data-dismiss="modal">Batal</button>
-                            <button type="submit" class="btn btn-primary" id="btn-add-permission">Simpan</button>
+                            <button type="submit" class="btn btn-primary" id="btn-add-presence-type">Simpan</button>
                         </div>
                     </form>
                 </div>
             </div>
         </div>
     @endcan
-    @can ('permission.update')
-        <div class="modal fade" tabindex="-1" role="dialog" id="modal-update-permission">
+    @can ('presence_type.update')
+        <div class="modal fade" tabindex="-1" role="dialog" id="modal-update-presence-type">
             <div class="modal-dialog modal-dialog-centered modal-md" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">Perbarui Izin</h5>
+                        <h5 class="modal-title">Perbarui Jenis Kehadiran</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <form method="POST" action="javascript:void(0)" id="form-update-permission">
+                    <form method="POST" action="javascript:void(0)" id="form-update-presence-type">
                         @csrf
                         @method('PUT')
-                        <input type="hidden" name="id" value="" id="update-permission-id">
+                        <input type="hidden" name="id" value="" id="update-presence-type-id">
                         <div class="modal-body">
                             <div class="row">
                                 <div class="form-group col-12">
                                     <label>Nama</label>
-                                    <input type="text" class="form-control" name="name" id="update-permission-name" required autofocus>
-                                </div>
-                                <div class="form-group col-12">
-                                    <label>Guard Name</label>
-                                    <input type="text" class="form-control" name="guard_name" id="update-permission-guard-name" required>
+                                    <input type="text" class="form-control" name="name" id="update-presence-type-name" required autofocus>
                                 </div>
                             </div>
                         </div>
                         <div class="modal-footer bg-whitesmoke br">
                             <button type="button" class="btn btn-danger" data-dismiss="modal">Batal</button>
-                            <button type="submit" class="btn btn-primary" id="btn-update-permission">Simpan Perubahan</button>
+                            <button type="submit" class="btn btn-primary" id="btn-update-presence-type">Simpan Perubahan</button>
                         </div>
                     </form>
                 </div>
@@ -132,66 +123,65 @@
         $(function () {
             "use strict";
 
-            getPermissions();
+            getPresenceTypes();
 
-            @can ('permission.create')
-                $("#form-add-permission").on("submit", function(e) {
+            @can ('presence_type.create')
+                $("#form-add-presence-type").on("submit", function(e) {
                     e.preventDefault();
-                    addPermission();
+                    addPresenceType();
                 });
             @endcan
 
-            @can ('permission.update')
-                $("#form-update-permission").on("submit", function(e) {
+            @can ('presence_type.update')
+                $("#form-update-presence-type").on("submit", function(e) {
                     e.preventDefault();
-                    updatePermission();
+                    updatePresenceType();
                 });
             @endcan
         });
 
-        async function getPermissions()
+        async function getPresenceTypes()
         {
-            $("#permission-list").dataTable({
+            $("#presence-type-list").dataTable({
                 processing: true,
                 serverSide: true,
-                ajax: "{{ route('admin.permission.data') }}",
+                ajax: "{{ route('admin.presence_type.data') }}",
                 destroy: true,
                 columns: [
                     { data: 'DT_RowIndex' },
                     { data: 'name' },
-                    { data: 'guard_name' },
                     { data: 'action' },
                 ]
             });
         }
 
-        @can ('permission.create')
-            async function addPermission()
+        @can ('presence_type.create')
+            async function addPresenceType()
             {
-                var formData = $("#form-add-permission").serialize();
+                var formData = $("#form-add-presence-type").serialize();
 
                 $.ajax({
-                    url: "{{ route('admin.permission.store') }}",
+                    url: "{{ route('admin.presence_type.store') }}",
                     type: "POST",
                     dataType: "json",
                     data: formData,
                     beforeSend() {
-                        $("#btn-add-permission").addClass('btn-progress');
-                        $("#btn-add-permission").attr('disabled', 'disabled');
+                        $("#btn-add-presence-type").addClass('btn-progress');
+                        $("#btn-add-presence-type").attr('disabled', 'disabled');
                         $("input").attr('disabled', 'disabled');
                         $("button").attr('disabled', 'disabled');
                     },
                     complete() {
-                        $("#btn-add-permission").removeClass('btn-progress');
-                        $("#btn-add-permission").removeAttr('disabled', 'disabled');
+                        $("#btn-add-presence-type").removeClass('btn-progress');
+                        $("#btn-add-presence-type").removeAttr('disabled', 'disabled');
                         $("input").removeAttr('disabled', 'disabled');
                         $("button").removeAttr('disabled', 'disabled');
                     },
                     success : function(result) {
                         if(result['status'] == 'success'){
-                            $("#form-add-permission")[0].reset();
-                            $('#modal-add-permission').modal('hide');
-                            getPermissions();
+                            $("#form-add-presence-type")[0].reset();
+                            $('#modal-add-presence-type').modal('hide');
+                            getPresenceTypes();
                         }
 
                         notification(result['status'], result['msg']);
@@ -200,16 +190,16 @@
             }
         @endcan
 
-        @can ('permission.update')
-            async function getUpdatePermission(obj)
+        @can ('presence_type.update')
+            async function getUpdatePresenceType(obj)
             {
                 var id = $(obj).data('id');
 
-                $('#modal-update-permission').modal('show');
-                $('#form-update-permission')[0].reset();
+                $('#modal-update-presence-type').modal('show');
+                $('#form-update-presence-type')[0].reset();
 
                 $.ajax({
-                    url: "{{ route('admin.permission.edit') }}",
+                    url: "{{ route('admin.presence_type.edit') }}",
                     type: "POST",
                     dataType: "json",
                     data: {
@@ -218,53 +208,52 @@
                         "_token": "{{ csrf_token() }}"
                     },
                     beforeSend() {
-                        $("#btn-update-permission").addClass('btn-progress');
-                        $("#btn-update-permission").attr('disabled', 'disabled');
+                        $("#btn-update-presence-type").addClass('btn-progress');
+                        $("#btn-update-presence-type").attr('disabled', 'disabled');
                         $("input").attr('disabled', 'disabled');
                         $("select").attr('disabled', 'disabled');
                         $("button").attr('disabled', 'disabled');
                     },
                     complete() {
-                        $("#btn-update-permission").removeClass('btn-progress');
-                        $("#btn-update-permission").removeAttr('disabled', 'disabled');
+                        $("#btn-update-presence-type").removeClass('btn-progress');
+                        $("#btn-update-presence-type").removeAttr('disabled', 'disabled');
                         $("input").removeAttr('disabled', 'disabled');
                         $("select").removeAttr('disabled', 'disabled');
                         $("button").removeAttr('disabled', 'disabled');
                     },
                     success : function(result) {
-                        $('#update-permission-id').val(result['data']['id']);
-                        $('#update-permission-name').val(result['data']['name']);
-                        $('#update-permission-guard-name').val(result['data']['guard_name']);
+                        $('#update-presence-type-id').val(result['data']['id']);
+                        $('#update-presence-type-name').val(result['data']['name']);
                     }
                 });
             }
 
-            async function updatePermission()
+            async function updatePresenceType()
             {
-                var formData = $("#form-update-permission").serialize();
+                var formData = $("#form-update-presence-type").serialize();
 
                 $.ajax({
-                    url: "{{ route('admin.permission.update') }}",
+                    url: "{{ route('admin.presence_type.update') }}",
                     type: "POST",
                     dataType: "json",
                     data: formData,
                     beforeSend() {
-                        $("#btn-update-permission").addClass('btn-progress');
-                        $("#btn-update-permission").attr('disabled', 'disabled');
+                        $("#btn-update-presence-type").addClass('btn-progress');
+                        $("#btn-update-presence-type").attr('disabled', 'disabled');
                         $("input").attr('disabled', 'disabled');
                         $("button").attr('disabled', 'disabled');
                     },
                     complete() {
-                        $("#btn-update-permission").removeClass('btn-progress');
-                        $("#btn-update-permission").removeAttr('disabled', 'disabled');
+                        $("#btn-update-presence-type").removeClass('btn-progress');
+                        $("#btn-update-presence-type").removeAttr('disabled', 'disabled');
                         $("input").removeAttr('disabled', 'disabled');
                         $("button").removeAttr('disabled', 'disabled');
                     },
                     success : function(result) {
                         if(result['status'] == 'success'){
-                            $("#form-update-permission")[0].reset();
-                            $('#modal-update-permission').modal('hide');
-                            getPermissions();
+                            $("#form-update-presence-type")[0].reset();
+                            $('#modal-update-presence-type').modal('hide');
+                            getPresenceTypes();
                         }
 
                         notification(result['status'], result['msg']);
@@ -274,21 +263,21 @@
         @endcan
 
         @can('permission.delete')
-            async function deletePermission(object)
+            async function deletePresenceType(object)
             {
                 var id = $(object).data('id');
                 Swal.fire({
-                    title: 'Anda yakin menghapus izin?',
+                    title: 'Anda yakin menghapus jenis kehadiran?',
                     text: 'Setelah dihapus, Anda tidak dapat memulihkannya kembali',
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#3085d6',
                     cancelButtonColor: '#d33',
-                    confirmButtonText: 'Ya, hapus izin!',
+                    confirmButtonText: 'Ya, hapus jenis kehadiran!',
                     showLoaderOnConfirm:true,
                     preConfirm: () => {
                         ajax =  $.ajax({
-                                    url: "{{ route('admin.permission.destroy') }}",
+                                    url: "{{ route('admin.presence_type.destroy') }}",
                                     type: "POST",
                                     dataType: "json",
                                     data: {
@@ -298,7 +287,7 @@
                                     },
                                     success : function(result) {
                                         if(result['status'] == 'success'){
-                                            getPermissions();
+                                            getPresenceTypes();
                                         }
                                         swalNotification(result['status'], result['msg']);
                                     }

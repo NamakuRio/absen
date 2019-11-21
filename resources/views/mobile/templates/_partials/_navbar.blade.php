@@ -15,7 +15,7 @@
                     <i class="far fa-user"></i> Akun
                 </a>
                 @can('setting.view')
-                    <a href="{{ route("admin.setting") }}" class="dropdown-item has-icon">
+                    <a href="{{ route("admin.setting.group") }}" class="dropdown-item has-icon">
                         <i class="fas fa-cog"></i> Pengaturan
                     </a>
                 @endcan

@@ -3,7 +3,6 @@
 <link rel="stylesheet" href="{{ asset('assets/modules/fontawesome/css/all.min.css') }}">
 
 <!-- CSS Libraries -->
-<link rel="stylesheet" href="{{ asset('assets/modules/izitoast/css/iziToast.min.css') }}">
 @yield('css-library')
 
 <!-- Page Specific JS File -->

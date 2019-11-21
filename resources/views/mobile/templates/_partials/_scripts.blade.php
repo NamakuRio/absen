@@ -8,8 +8,8 @@
 <script src="{{ asset('assets/js/stisla.js') }}"></script>
 
 <!-- JS Libraies -->
-<script src="{{ asset('assets/modules/izitoast/js/iziToast.min.js') }}"></script>
-<script src="{{ asset('assets/modules/sweetalert/sweetalert.min.js') }}"></script>
+{{-- <script src="{{ asset('assets/modules/sweetalert/sweetalert.min.js') }}"></script> --}}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 @yield('js-library')
 
 <!-- Page Specific JS File -->
@@ -20,31 +20,24 @@
 <script src="{{ asset('assets/js/custom.js') }}"></script>
 
 <script>
-    async function notification(status, titleToast, messageToast)
+    async function notification(icon, title, position = "top-end", showConfirmButton = false, timer = 3000, timerProgressBar = true)
     {
-        if(status == 'success'){
-            iziToast.success({
-                title: titleToast,
-                message: messageToast,
-                position: 'topRight'
-            });
-        }
+        const Toast = Swal.mixin({
+            toast: true,
+            position: position,
+            showConfirmButton: showConfirmButton,
+            timer: timer,
+            timerProgressBar: timerProgressBar,
+            onOpen: (toast) => {
+                toast.addEventListener('mouseenter', Swal.stopTimer)
+                toast.addEventListener('mouseleave', Swal.resumeTimer)
+            }
+        });
 
-        if(status == 'warning'){
-            iziToast.warning({
-                title: titleToast,
-                message: messageToast,
-                position: 'topRight'
-            });
-        }
-
-        if(status == 'error'){
-            iziToast.error({
-                title: titleToast,
-                message: messageToast,
-                position: 'topRight'
-            });
-        }
+        Toast.fire({
+            icon: icon,
+            title: title
+        });
     }
 
     async function swalNotification(status, message)
